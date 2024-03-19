@@ -67,4 +67,3 @@ jobs:
           app-name: 'ankit-react-app'
           slot-name: 'Production'
           package: release.zip
-          
