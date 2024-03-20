@@ -49,7 +49,7 @@ function App() {
       <div>
         <h1>Tasks</h1>
         <Link to="/test">Go to Test Page</Link>
-        <table className="table">c
+        <table className="table">
           <thead>
           <tr>
             <th>ID</th>
