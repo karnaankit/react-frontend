@@ -23,18 +23,18 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          yarn
+          yarn build
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
+        run: |
+          cd dist
+          zip release.zip ./* -r      # Zip all files in dist folder
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: release.zip
+          path: ./dist/release.zip      # Upload the release.zip file
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,9 +50,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -60,12 +57,10 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4D3DB97B32BB4ACC9F62EAB632686910 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9379ED5157D14965A8A0D1725F3B6BBA }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2F3711CD4DA94A7687729E7FAFC157B4 }}
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'ankit-react-app'
           slot-name: 'Production'
-          package: .
-          
+          package: release.zip    # Used zip deployment method to deploy the artifact
